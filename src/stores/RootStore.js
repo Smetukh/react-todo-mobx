@@ -18,7 +18,7 @@ rootStore.todos.add("OIL");
 rootStore.groups.add("SHOPPING LIST");
 rootStore.groups.add("WATCH LIST");
 const lastTodo = rootStore.todos.list[0];
-const lastGroup = rootStore.groups.list[1];
+const lastGroup = rootStore.groups.list[0];
 
 lastGroup.addTodo(lastTodo);
 

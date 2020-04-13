@@ -71,6 +71,11 @@ export const TodoListModel = t
       return store.list.filter((item) => item.isFavorite);
     },
   }))
+  .views((store) => ({
+    get completedList() {
+      return store.list.filter((item) => item.isCompleted);
+    },
+  }))
   .actions((store) => ({
     add(title) {
       const todo = {
