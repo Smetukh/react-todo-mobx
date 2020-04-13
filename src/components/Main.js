@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { values } from "mobx";
 import { observer } from "mobx-react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faCheckCircle,
+  faCircle,
+  faStar,
+  faStarOfLife,
+} from "@fortawesome/free-solid-svg-icons";
+import classNames from "classnames";
 
 import store from "../stores/RootStore";
 import { prettyPrint } from "../utils";
@@ -19,16 +26,33 @@ const GroupItem = observer(({ group, getActiveGroup }) => {
   );
 });
 
-const TodoItem = observer(({ todo }) => (
-  <li
-    key={todo.id}
-    className="main__todos-todoItem"
-    onClick={() => todo.toggleComplete()}
-  >
-    <FontAwesomeIcon className="main__todos-buttonPlus" size="xs" icon={faCheckCircle} />
-    <span className="main__todos-todoText">{todo.title}</span>
-  </li>
-));
+const TodoItem = observer(({ todo }) => {
+  const cn = classNames({
+    "main__todos-todoText": true,
+    "main__color-blue": true,
+    "main__todos-crossedText": todo.isCompleted,
+  });
+  return (
+    <li key={todo.id} className="main__todos-todoItem">
+      <FontAwesomeIcon
+        className={classNames("main__todos-faIcon", "main__color-blue")}
+        size="xs"
+        icon={todo.isCompleted ? faCheckCircle : faCircle}
+        onClick={() => todo.toggleComplete()}
+      />
+      <span className={cn} onClick={() => todo.toggleComplete()}>
+        {todo.title}
+      </span>
+
+      <FontAwesomeIcon
+        className={classNames("main__todos-faIcon", "main__color-blue", "main__todos-favIcon")}
+        size="xs"
+        icon={todo.isFavorite ? faStar : faStarOfLife}
+        onClick={() => todo.toggleFavorite()}
+      />
+    </li>
+  );
+});
 
 const Main = () => {
   prettyPrint(store);
@@ -41,19 +65,36 @@ const Main = () => {
     setActiveGroup(newGroup);
   };
 
-  const addNewTodo = (name) => {
-    store.todos.add(name);
+  const addNewTodo = () => {
+    if (!inputValue.trim()) return;
+    store.todos.add(inputValue);
     store.groups.list[activeGroup].addTodo(store.todos.list[0]);
-    setInputValue('');
+    setInputValue("");
+  };
+  const keyPress = (e) => {
+    if (e.keyCode == 13) {
+      console.log("value", e.target.value);
+      addNewTodo();
+    }
   };
 
   const inputChangeHandler = (event) => {
     setInputValue(event.target.value);
     console.log("inputValue = ", inputValue);
   };
+
   return (
     <div className="main__container">
       <div className="main__sidebar-container">
+        <div className="main__sidebar-options">
+          <FontAwesomeIcon
+            className={classNames("main__todos-faIcon", "main__color-blue")}
+            size="xs"
+            icon={faStar}
+            // onClick={() => todo.toggleFavorite()}
+          />
+          <span>Important</span>
+        </div>
         <ul>
           {values(store.groups.list).map((group) => (
             <GroupItem group={group} getActiveGroup={getActiveGroup} />
@@ -62,22 +103,35 @@ const Main = () => {
       </div>
 
       <div className="main__todos-container">
-      
+        <div className="main__todos-title">
+          <h2 className="main__todos-titleText">
+            {store.groups.list[activeGroup].title}
+          </h2>
+        </div>
         <ul className="main_todos-listContainer">
           <li className="main__todos-listItem">
-              {/* <button className="main__todos-plusButton" type="button" > */}
-              {/* <FontAwesomeIcon icon="check-square" /> */}
-              <FontAwesomeIcon className="main__todos-buttonPlus" size="xs" icon={faPlus} />
-              {/* </button> */}
+            <FontAwesomeIcon
+              className={classNames("main__todos-faIcon", "main__color-blue")}
+              size="xs"
+              icon={inputValue ? faCircle : faPlus}
+            />
+            {/* </button> */}
             <input
               className="main__todos-input"
               onChange={inputChangeHandler}
+              onKeyDown={keyPress}
               value={inputValue}
               placeholder="Add a todo"
             />
-            <button className="main__todos-buttonAdd" type="button" onClick={() => addNewTodo(inputValue)}>
-              ADD
-            </button>
+            {inputValue && (
+              <button
+                className="main__todos-buttonAdd"
+                type="button"
+                onClick={addNewTodo}
+              >
+                ADD
+              </button>
+            )}
           </li>
           {values(store.groups.list[activeGroup].todos).map((todo) => (
             <TodoItem todo={todo} />
