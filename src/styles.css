@@ -1,4 +1,119 @@
+body {
+  margin: 0;
+}
+
 .App {
   font-family: sans-serif;
   text-align: center;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  background: #0078D7;
+  color: white;
+  font-family: Helvetica;
+  font-weight: 300;
+}
+
+.navbar__title {
+  margin-right: auto;
+  font-size: 150%;
+  padding: 12px 16px;
+}
+
+.navbar__item {
+  padding: 16px 16px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.main__container {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+.main__todos-container {
+  display: flex;
+  flex: 1;
+}
+.main_todos-listContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 50px;
+}
+.main__todos-listItem {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  box-shadow: 0 17px 0 -16px #e5e5e5;
+  padding: 0 13px;
+}
+
+.main__todo-completed {
+  font-size: large;
+  color: brown;
+}
+.main__sidebar-container {
+  width: 290px;
+}
+.main__todos-input {
+  width: 100%;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 16px 12px;
+  font-size: 14px;
+  transition: none;
+  color: #34373d;
+}
+.main__todos-input:focus {
+  outline: none;
+}
+.main__todos-buttonPlus {
+  color: #3459c1;
+  line-height: 2.4rem;
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.main__todos-buttonAdd {
+  height: 32px;
+  width: auto;
+  padding: 0 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  /* font-weight: bold; */
+  text-align: right;
+  cursor: pointer;
+
+  background: none;
+  box-shadow: none;
+  border: none;
+  color: #3459c1;
+}
+.main__todos-todoItem {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  word-wrap: break-word;
+  word-break: break-word;
+  box-shadow: 0 17px 0 -16px #e5e5e5;
+  flex-wrap: wrap;
+  font-weight: lighter;
+  justify-content: flex-start;
+  flex-direction: row;
+  padding: 0 13px;
+}
+.main__todos-todoText {
+  padding: 16px 12px;
 }
