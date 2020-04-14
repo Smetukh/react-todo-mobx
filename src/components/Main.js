@@ -15,43 +15,41 @@ import classNames from "classnames";
 import store from "../stores/RootStore";
 import { prettyPrint } from "../utils";
 
-const GroupItem = observer(({ group, active, icon, todosFavorite = [], getActiveGroup }) => {
-  const cn = classNames({
-    "main__todos-todoText": true,
-    "main__color-grey": !active,
-    "main__color-blue": active,
-  });
-  let filteredList = null;
-  let todoNumber = null;
-  console.log('todosFavorite = ', JSON.stringify(todosFavorite))
-  console.log(
-    'group.title = ', group.title
-  )
-  if (group.title !== 'Important') {
-    filteredList = group.todos.filter((todo) => todo.isCompleted);
-    todoNumber = group.todos.length - filteredList.length;
-  } else {
-    todoNumber = todosFavorite.length;
-  }
-console.log(
-  'todoNumber = ', todoNumber
-)
-  return (
-    <li className="main__sidebar-listItem">
-      <FontAwesomeIcon
-        className={classNames("main__todos-faIcon", "main__color-grey")}
-        size="xs"
-        icon={icon}
-        onClick={() => getActiveGroup(group.id)}
-      />
-      <span className={cn} onClick={() => getActiveGroup(group.id)}>
-        {group.title}
-      </span>
+const GroupItem = observer(
+  ({ group, active, icon, todosFavorite = [], getActiveGroup }) => {
+    const cn = classNames({
+      "main__todos-todoText": true,
+      "main__color-grey": !active,
+      "main__color-blue": active,
+    });
+    let filteredList = null;
+    let todoNumber = null;
+    console.log("todosFavorite = ", JSON.stringify(todosFavorite));
+    console.log("group.title = ", group.title);
+    if (group.title !== "Important") {
+      filteredList = group.todos.filter((todo) => todo.isCompleted);
+      todoNumber = group.todos.length - filteredList.length;
+    } else {
+      todoNumber = todosFavorite.length;
+    }
+    console.log("todoNumber = ", todoNumber);
+    return (
+      <li className="main__sidebar-listItem">
+        <FontAwesomeIcon
+          className={classNames("main__todos-faIcon", "main__color-grey")}
+          size="xs"
+          icon={icon}
+          onClick={() => getActiveGroup(group.id)}
+        />
+        <span className={cn} onClick={() => getActiveGroup(group.id)}>
+          {group.title}
+        </span>
 
-      {!!todoNumber && <p className="main__todos-favIcon">{todoNumber}</p>}
-    </li>
-  );
-});
+        {!!todoNumber && <p className="main__todos-favIcon">{todoNumber}</p>}
+      </li>
+    );
+  }
+);
 
 const TodoItem = observer(({ todo }) => {
   const cn = classNames({
@@ -65,6 +63,8 @@ const TodoItem = observer(({ todo }) => {
     "main__color-blue": todo.isFavorite,
     "main__color-grey": !todo.isFavorite,
   });
+  
+
   return (
     <li key={todo.id} className="main__todos-todoItem">
       <FontAwesomeIcon
@@ -94,6 +94,13 @@ const Main = () => {
     todos: values(store.groups.list[0].todos),
   });
   const [inputValue, setInputValue] = useState("");
+  const [inputGroup, setInputGroup] = useState("");
+
+  const cnNewGroup = classNames({
+    "main__todos-faIcon": true,
+    "main__color-grey": !inputGroup,
+    "main__color-blue": inputGroup,
+  });
 
   const getActiveGroup = (id) => {
     const newGroupIndex = store.groups.list.findIndex((item) => id === item.id);
@@ -123,10 +130,28 @@ const Main = () => {
       addNewTodo();
     }
   };
-
   const inputChangeHandler = (event) => {
     setInputValue(event.target.value);
-    console.log("inputValue = ", inputValue);
+  };
+
+  const addNewGroup = () => {
+    if (!inputGroup.trim()) return;
+    store.groups.add(inputGroup);
+    setActive({
+      group: 0,
+      todos: values(store.groups.list[0].todos),
+    });
+    setInputGroup("");
+  };
+  const keyGroupPress = (e) => {
+    if (e.keyCode == 13) {
+      addNewGroup();
+    }
+  };
+
+  
+  const inputGroupChangeHandler = (event) => {
+    setInputGroup(event.target.value);
   };
   const importantItem = { id: "Important", title: "Important", icon: faStar };
   console.log("active = ", active);
@@ -149,9 +174,31 @@ const Main = () => {
               icon={faList}
               active={index === active.group}
               getActiveGroup={getActiveGroup}
-              
             />
           ))}
+          <li className="main__todos-listItem">
+            <FontAwesomeIcon
+              className={cnNewGroup}
+              size="xs"
+              icon={faPlus}
+            />
+            <input
+              className="main__todos-input"
+              onChange={inputGroupChangeHandler}
+              onKeyDown={keyGroupPress}
+              value={inputGroup}
+              placeholder="New List"
+            />
+            {/* {inputGroup && (
+              <button
+                className="main__todos-buttonAdd"
+                type="button"
+                onClick={addNewTodo}
+              >
+                ADD
+              </button>
+            )} */}
+          </li>
         </ul>
       </div>
 
@@ -170,7 +217,6 @@ const Main = () => {
               size="xs"
               icon={inputValue ? faCircle : faPlus}
             />
-            {/* </button> */}
             <input
               className="main__todos-input"
               onChange={inputChangeHandler}

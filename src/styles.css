@@ -41,7 +41,7 @@ body {
 }
 .main_todos-listContainer {
   display: flex;
-  flex: 1;
+  width: 100%;
   flex-direction: column;
   height: 50px;
   padding-left: 14px;
