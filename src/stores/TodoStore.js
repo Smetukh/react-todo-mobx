@@ -70,8 +70,6 @@ export const TodoListModel = t
     get favoriteList() {
       return store.list.filter((item) => item.isFavorite);
     },
-  }))
-  .views((store) => ({
     get completedList() {
       return store.list.filter((item) => item.isCompleted);
     },

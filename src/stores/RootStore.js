@@ -20,6 +20,7 @@ rootStore.groups.add("WATCH LIST");
 const lastTodo = rootStore.todos.list[0];
 const lastGroup = rootStore.groups.list[0];
 
+lastGroup.addTodo(rootStore.todos.list[1]);
 lastGroup.addTodo(lastTodo);
 
 lastTodo.toggleComplete();
