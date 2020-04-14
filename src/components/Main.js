@@ -15,7 +15,7 @@ import classNames from "classnames";
 import store from "../stores/RootStore";
 import { prettyPrint } from "../utils";
 
-const GroupItem = observer(({ group, active, icon, todosLength, getActiveGroup }) => {
+const GroupItem = observer(({ group, active, icon, todosFavorite = [], getActiveGroup }) => {
   const cn = classNames({
     "main__todos-todoText": true,
     "main__color-grey": !active,
@@ -23,14 +23,18 @@ const GroupItem = observer(({ group, active, icon, todosLength, getActiveGroup }
   });
   let filteredList = null;
   let todoNumber = null;
+  console.log('todosFavorite = ', JSON.stringify(todosFavorite))
+  console.log(
+    'group.title = ', group.title
+  )
   if (group.title !== 'Important') {
     filteredList = group.todos.filter((todo) => todo.isCompleted);
     todoNumber = group.todos.length - filteredList.length;
   } else {
-    todoNumber = todosLength;
+    todoNumber = todosFavorite.length;
   }
 console.log(
-  'todosLength = ', todosLength
+  'todoNumber = ', todoNumber
 )
   return (
     <li className="main__sidebar-listItem">
@@ -136,6 +140,7 @@ const Main = () => {
             active={active.group === "Important"}
             icon={importantItem.icon}
             getActiveGroup={getActiveGroup}
+            todosFavorite={store.todos.favoriteList}
           />
           {values(store.groups.list).map((group, index) => (
             <GroupItem
@@ -144,7 +149,7 @@ const Main = () => {
               icon={faList}
               active={index === active.group}
               getActiveGroup={getActiveGroup}
-              todosLength={active.todos.length}
+              
             />
           ))}
         </ul>
