@@ -1,5 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
+import { values } from "mobx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircle } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
@@ -14,6 +15,11 @@ const TodoList = ({
   inputValue,
   addNewTodo,
 }) => {
+  const todosRendered =
+    active.group === "Important"
+      ? store.todos.favoriteList
+      : values(store.groups.list[active.group].todos);
+
   return (
     <div className="main__todos-container">
       <div className="main__todos-title">
@@ -47,7 +53,7 @@ const TodoList = ({
             </button>
           )}
         </li>
-        {active.todos.map((todo) => (
+        {todosRendered.map((todo) => (
           <TodoItem key={todo.id} todo={todo} />
         ))}
       </ul>

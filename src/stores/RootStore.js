@@ -2,8 +2,11 @@ import { v4 as uuid } from "uuid";
 import { TodoListModel } from "./TodoStore";
 import { GroupListModel } from "./GroupStore";
 import { autorun } from 'mobx';
-import { types as t, clone } from "mobx-state-tree";
+import localForage from 'localforage';
+import { types as t, onSnapshot, clone } from "mobx-state-tree";
 import { prettyPrint } from "../utils";
+import createPersist from "./persist";
+import Api from '../api/Api';
 
 const RootStore = t.model("RootStore", {
   todos: t.optional(TodoListModel, {}),
@@ -12,17 +15,23 @@ const RootStore = t.model("RootStore", {
 
 const rootStore = RootStore.create({});
 
+
+onSnapshot(rootStore, (snapshot) => prettyPrint(snapshot));
 // autorun(() => prettyPrint(rootStore));
-rootStore.todos.add("POTATO");
-rootStore.todos.add("OIL");
+
+const persist = createPersist(rootStore, localForage);
+persist.rehydrate();
+
+// rootStore.todos.add("POTATO");
+// rootStore.todos.add("OIL");
 rootStore.groups.add("SHOPPING LIST");
-rootStore.groups.add("WATCH LIST");
-const lastTodo = rootStore.todos.list[0];
-const lastGroup = rootStore.groups.list[0];
+// rootStore.groups.add("WATCH LIST");
+// const lastTodo = rootStore.todos.list[0];
+// const lastGroup = rootStore.groups.list[0];
 
-lastGroup.addTodo(rootStore.todos.list[1]);
-lastGroup.addTodo(lastTodo);
+// lastGroup.addTodo(rootStore.todos.list[1]);
+// lastGroup.addTodo(lastTodo);
 
-lastTodo.toggleComplete();
+// lastTodo.toggleComplete();
 
 export default rootStore;

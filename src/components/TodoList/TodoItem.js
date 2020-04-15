@@ -11,6 +11,7 @@ import {
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
+import store from "../../stores/RootStore";
 
 
 const TodoItem = observer(({ todo }) => {
@@ -25,14 +26,14 @@ const TodoItem = observer(({ todo }) => {
     "main__color-blue": todo.isFavorite,
     "main__color-grey": !todo.isFavorite,
   });
-
+  console.log('TodoItem store = ', store)
   return (
     <li key={todo.id} className="main__todos-todoItem">
       <FontAwesomeIcon
         className={classNames("main__todos-faIcon", "main__color-blue")}
         size="xs"
         icon={todo.isCompleted ? faCheckCircle : faCircle}
-        onClick={() => todo.toggleComplete()}
+        onClick={() => {console.log('toggleComplete '); todo.toggleComplete()}}
       />
       <span className={cn} onClick={() => todo.toggleComplete()}>
         {todo.title}

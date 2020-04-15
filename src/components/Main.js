@@ -13,6 +13,8 @@ const Main = () => {
   });
   const [inputValue, setInputValue] = useState("");
   const [inputGroup, setInputGroup] = useState("");
+  console.log('active = ', active)
+  console.log('todos = ', values(store.groups.list[0].todos))
 
   const getActiveGroup = (id) => {
     const newGroupIndex = store.groups.list.findIndex((item) => id === item.id);
@@ -64,7 +66,7 @@ const Main = () => {
   const inputGroupChangeHandler = (event) => {
     setInputGroup(event.target.value);
   };
-
+  console.log('Main store = ', store)
   return (
     <div className="main__container">
       <Sidebar

@@ -4,19 +4,18 @@ import classNames from "classnames";
 
 const GroupItem = ({
   group,
-  active,
+  activeItem,
   icon,
   todosFavorite = [],
   getActiveGroup,
 }) => {
   const cn = classNames({
     "main__todos-todoText": true,
-    "main__color-grey": !active,
-    "main__color-blue": active,
+    "main__color-grey": !activeItem,
+    "main__color-blue": activeItem,
   });
   let filteredList = null;
   let todoNumber = null;
-
   if (group.title !== "Important") {
     filteredList = group.todos.filter((todo) => todo.isCompleted);
     todoNumber = group.todos.length - filteredList.length;
