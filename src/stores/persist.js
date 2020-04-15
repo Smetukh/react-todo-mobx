@@ -11,7 +11,7 @@ function createPersist(store, storage) {
     }
 
     function purge() {
-        storage.removeIte(PERSIST_KEY);
+        storage.removeItem(PERSIST_KEY);
     }
 
     onSnapshot(store, (snapshot) => {
@@ -20,7 +20,7 @@ function createPersist(store, storage) {
 
     return {
         rehydrate,
-        purge,
+        // purge,
     }
 }
 

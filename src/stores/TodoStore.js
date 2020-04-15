@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
-import { types as t } from "mobx-state-tree";
+import { types as t, flow, getRoot } from "mobx-state-tree";
 import { prettyPrint } from "../utils";
+import Api from "../api/Api";
 
 const state = {
   list: [
@@ -11,60 +12,68 @@ const state = {
   ],
 };
 
-// const TodoModel = t
-//   .model("TodoModel", {
-//     id: t.string,
-//     title: t.string,
-//     isCompleted: t.optional(t.boolean, false),
-//     isFavorite: t.optional(t.boolean, false),
-//   })
-//   .actions((store) => ({
-//     toggleComplete() {
-//       store.isCompleted = !store.isCompleted;
-//     },
-//     toggleFavorite() {
-//       store.isFavorite = !store.isFavorite;
-//     },
-//   }));
-
-// const TodoListmodel = t
-//   .model("TodoListmodel", {
-//     list: t.array(TodoModel),
-//   })
-//   .views((store) => ({
-//     getFavoriteList() {
-//       return store.list.filter((item) => item.isFavorite);
-//     },
-//   }))
-//   .actions((store) => ({
-//     add(title) {
-//       const todo = {
-//         id: uuid(),
-//         title,
-//       };
-//       store.list.unshift(todo);
-//     },
-//   }));
-
 export const TodoModel = t
   .model("TodoModel", {
     id: t.identifier,
     title: t.string,
     isCompleted: t.optional(t.boolean, false),
     isFavorite: t.optional(t.boolean, false),
+    isTogglingFavorite: false,
+    isTogglingFavoriteError: false,
+    isSending: false,
+    isSendingError: false,
+    isCreatedLocally: false,
   })
   .actions((store) => ({
+    afterAttach() {
+      
+      if (store.isCreatedLocally) {
+        store.send();
+      }
+    },
+    send: flow(function* send() {
+      store.isSending = true;
+      store.isSendingError = false;
+      todo.isCreatedLocally = false;
+      try {
+        const todo = yield Api.Todos.add(store);
+        todo.isSending = false;
+
+        getRoot(store).todos.replaceItem(store.id, todo);
+      } catch (error) {
+        console.log(error);
+        store.isSendingError = true;
+        store.isSending = false;
+      }
+    }),
     toggleComplete() {
       store.isCompleted = !store.isCompleted;
     },
-    toggleFavorite() {
+    toggleFavorite: flow(function* toggleFavorite() {
+      const oldValue = store.isFavorite;
+      store.isTogglingFavorite = true;
+      store.isTogglingFavoriteError = false;
       store.isFavorite = !store.isFavorite;
-    },
+
+      try {
+        yield Api.Todos.update({id: store.id, isFavorite: store.isFavorite });
+
+      } catch (error) {
+        console.log(error);
+        store.isTogglingFavoriteError = true;
+        store.isFavorite = oldValue;
+      } finally {
+        store.isTogglingFavorite = false;
+      }
+    }),
   }));
 
 export const TodoListModel = t
   .model("TodoModel", {
     list: t.array(TodoModel),
+    isLoading: false,
+    isLoadingError: false,
+    
   })
   .views((store) => ({
     get favoriteList() {
@@ -75,30 +84,44 @@ export const TodoListModel = t
     },
   }))
   .actions((store) => ({
+    // add: flow(function* add(title) {
+    //   const todo = TodoModel.create({
+    //     id: uuid(),
+    //     title,
+    //   });
+    //   store.list.unshift(todo);
+    //   yield todo.send();
+      
+    // }),
     add(title) {
       const todo = {
         id: uuid(),
         title,
+        isCreatedLocally: true,
       };
       store.list.unshift(todo);
+      
     },
+
+    replaceItem(id, todo) {
+      const index = store.list.findIndex((item) => item.id === id);
+      if (index > -1) {
+        store.list[index] = todo;
+      }
+    },
+    getTodos: flow(function* getTodos() {
+      store.isLoading = true;
+      store.isLoadingError = false;
+
+      try {
+        const todos = yield Api.Todos.getAll();
+        store.list = todos;
+      } catch (error) {
+        console.log(error);
+        store.isLoadingError = true;
+      } finally {
+        store.isLoading = false;
+      }
+    }),
+    
   }));
-
-// const todo1 = TodoModel1.create({ id: uuid(), title: "potato" });
-
-// const todoList = TodoListModel.create(state);
-
-// const todoList = TodoListModel.create(state);
-
-// todoList.add("chocolate");
-// todoList.add("oil");
-
-
-// todoList[1].toggleComplete();
-// todo1.toggleComplete();
-// todoList.add("chocolate");
-// todoList.list[1].toggleComplete();
-// todoList.list[1].toggleFavorite();
-// prettyPrint(todoList);
-// prettyPrint(todoList.favoriteList);
-// prettyPrint(todo1);
