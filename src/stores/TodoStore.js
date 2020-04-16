@@ -34,10 +34,10 @@ export const TodoModel = t
     send: flow(function* send() {
       store.isSending = true;
       store.isSendingError = false;
-      todo.isCreatedLocally = false;
       try {
         const todo = yield Api.Todos.add(store);
         todo.isSending = false;
+        todo.isCreatedLocally = false;
 
         getRoot(store).todos.replaceItem(store.id, todo);
       } catch (error) {
