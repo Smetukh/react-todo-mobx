@@ -39,33 +39,5 @@ rootStore.todos.getTodos().then(async () => {
 
 // rootStore.groups.add("WATCH LIST");
 
-// const todo = rootStore.todos.list[0];
-//group.add(todo.id);
-
-// async function createTodo() {
-//   const result = await Api.Todos.add(todo);
-//   console.log(result);
-// }
-
-// async function getTodos() {
-//   const result = await Api.Todos.getAll();
-//   console.log('result getTodos() = ', result)
-// }
-
-// const lastTodo = rootStore.todos.list[0];
-// const lastGroup = rootStore.groups.list[0];
-
-// lastGroup.addTodo(rootStore.todos.list[1]);
-// lastGroup.addTodo(lastTodo);
-
-// lastTodo.toggleComplete();
-
-// async function run() {
-  // await getTodos();
-  // await createTodo();
-  // await getTodos();
-// }
-
-// run();
 
 export default rootStore;

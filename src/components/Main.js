@@ -9,7 +9,7 @@ import TodoList from "./TodoList/TodoList";
 const Main = () => {
   const [active, setActive] = useState({
     group: 0,
-    // todos: values(store.groups.list[0].todos),
+    todos: values(store.groups.list[0].todos),
   });
   const [inputValue, setInputValue] = useState("");
   const [inputGroup, setInputGroup] = useState("");

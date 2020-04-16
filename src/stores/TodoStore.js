@@ -39,12 +39,6 @@ export const TodoModel = t
         const todo = yield Api.Todos.add(store);
         todo.isSending = false;
         todo.isCreatedLocally = false;
-        console.log(
-          "getRoot(store).groups.list[0] = ",
-          getRoot(store).groups.list[0]
-        );
-        console.log("store.id = ", store.id);
-        console.log("todo = ", todo);
          getRoot(store).groups.replaceTodoRef(
           store.id,
           todo.id
