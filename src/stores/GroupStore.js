@@ -1,18 +1,49 @@
 import { v4 as uuid } from "uuid";
 import { TodoModel } from "./TodoStore";
-import { types as t } from "mobx-state-tree";
+import { types as t, flow, getRoot } from "mobx-state-tree";
 import { prettyPrint } from "../utils";
+import Api from "../api/Api";
+
 
 const GroupModel = t
   .model("ListModel", {
     id: t.string,
     title: t.string,
     todos: t.array(t.reference(TodoModel)),
+    isSending: false,
+    isSendingError: false,
+    isCreatedLocally: false,
+    isLoading: false,
+    isLoadingError: false,
+
   })
   .actions((store) => ({
     addTodo(todo) {
       store.todos.unshift(todo);
     },
+    afterAttach() {
+      if (store.isCreatedLocally) {
+        store.send();
+      }
+    },
+    send: flow(function* send() {
+      store.isSending = true;
+      store.isSendingError = false;
+      try {
+        const group = yield Api.Groups.add(store);
+        group.isSending = false;
+        group.isCreatedLocally = false;
+
+        console.log("store.id = ", store.id);
+        console.log("group = ", group);
+
+         getRoot(store).groups.replaceGroup(store.id, group);
+      } catch (error) {
+        console.log(error);
+        store.isSendingError = true;
+        store.isSending = false;
+      }
+    }),
   }));
 
 export const GroupListModel = t
@@ -24,9 +55,40 @@ export const GroupListModel = t
       const group = {
         id: uuid(),
         title,
+        isCreatedLocally: true,
       };
       store.list.unshift(group);
     },
+    replaceGroup(id, group) {
+      const index = store.list.findIndex((group) => group.id === id);
+      if (index > -1) {
+        store.list[index] = group;
+      }
+    },
+    replaceTodoRef(id, newId) {
+      const index = getRoot(store).groups.list[0].todos.findIndex((item) => {
+        console.log("item = ", item);
+        return item.id === id;
+      });
+      if (index > -1) {
+        store.list[0].todos[index] = newId;
+
+      }
+    },
+    getGroups: flow(function* getGroups() {
+      store.isLoading = true;
+      store.isLoadingError = false;
+
+      try {
+        const groups = yield Api.Groups.getAll();
+        store.list = groups;
+      } catch (error) {
+        console.log(error);
+        store.isLoadingError = true;
+      } finally {
+        store.isLoading = false;
+      }
+    }),
   }));
 
 // const group = GroupModel.create({

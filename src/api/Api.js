@@ -1,5 +1,5 @@
 import LocalStorage from 'localforage';
-import { v4 as uuid } from 'uuid/v4';
+import { v4 as uuid } from "uuid";
 
 const TodosApi = {
   add(body) {

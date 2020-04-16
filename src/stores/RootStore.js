@@ -7,27 +7,36 @@ import createPersist from "./persist";
 import Api from '../api/Api';
 import { runInAction } from "mobx";
 
-const RootStore = t.model("RootStore", {
+const RootModel = t.model("RootModel", {
   todos: t.optional(TodoListModel, {}),
   groups: t.optional(GroupListModel, {}),
 });
 
-const rootStore = RootStore.create({});
+const rootStore = RootModel.create({});
 
 
 onSnapshot(rootStore, (snapshot) => prettyPrint(snapshot));
 // autorun(() => prettyPrint(rootStore));
 
 rootStore.todos.getTodos().then(async () => {
-  await rootStore.todos.list[0].toggleFavorite();
-  console.log('LOADING SUCCESS')});
+
+  console.log('LOADING getGroups SUCCESS')})
+  .then(async () => {
+    await rootStore.groups.getGroups();
+    console.log('LOADING getGroups SUCCESS')});
+  
+// rootStore.todos.getTodos().then(async () => {
+  // await rootStore.todos.list[0].toggleFavorite();
+  // console.log('LOADING getTodos SUCCESS')});
+
+  rootStore.groups.add("SHOPPING LIST");
 
 // const persist = createPersist(rootStore, localForage);
 // persist.rehydrate();
 
-rootStore.todos.add("POTATO");
+// rootStore.todos.add("POTATO");
 // rootStore.todos.add("OIL");
-rootStore.groups.add("SHOPPING LIST");
+
 // rootStore.groups.add("WATCH LIST");
 
 // const todo = rootStore.todos.list[0];

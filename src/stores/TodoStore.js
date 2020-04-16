@@ -23,10 +23,11 @@ export const TodoModel = t
     isSending: false,
     isSendingError: false,
     isCreatedLocally: false,
+    isLoading: false,
+    isLoadingError: false,
   })
   .actions((store) => ({
     afterAttach() {
-      
       if (store.isCreatedLocally) {
         store.send();
       }
@@ -38,8 +39,17 @@ export const TodoModel = t
         const todo = yield Api.Todos.add(store);
         todo.isSending = false;
         todo.isCreatedLocally = false;
-
-        getRoot(store).todos.replaceItem(store.id, todo);
+        console.log(
+          "getRoot(store).groups.list[0] = ",
+          getRoot(store).groups.list[0]
+        );
+        console.log("store.id = ", store.id);
+        console.log("todo = ", todo);
+         getRoot(store).groups.replaceTodoRef(
+          store.id,
+          todo.id
+        );
+         getRoot(store).todos.replaceItem(store.id, todo);
       } catch (error) {
         console.log(error);
         store.isSendingError = true;
@@ -56,8 +66,7 @@ export const TodoModel = t
       store.isFavorite = !store.isFavorite;
 
       try {
-        yield Api.Todos.update({id: store.id, isFavorite: store.isFavorite });
-
+        yield Api.Todos.update({ id: store.id, isFavorite: store.isFavorite });
       } catch (error) {
         console.log(error);
         store.isTogglingFavoriteError = true;
@@ -73,7 +82,6 @@ export const TodoListModel = t
     list: t.array(TodoModel),
     isLoading: false,
     isLoadingError: false,
-    
   })
   .views((store) => ({
     get favoriteList() {
@@ -91,7 +99,7 @@ export const TodoListModel = t
     //   });
     //   store.list.unshift(todo);
     //   yield todo.send();
-      
+
     // }),
     add(title) {
       const todo = {
@@ -100,7 +108,6 @@ export const TodoListModel = t
         isCreatedLocally: true,
       };
       store.list.unshift(todo);
-      
     },
 
     replaceItem(id, todo) {
@@ -109,6 +116,7 @@ export const TodoListModel = t
         store.list[index] = todo;
       }
     },
+    
     getTodos: flow(function* getTodos() {
       store.isLoading = true;
       store.isLoadingError = false;
@@ -123,5 +131,4 @@ export const TodoListModel = t
         store.isLoading = false;
       }
     }),
-    
   }));
