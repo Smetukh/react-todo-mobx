@@ -25,6 +25,7 @@ export const TodoModel = t
     isCreatedLocally: false,
     isLoading: false,
     isLoadingError: false,
+    activeGroupId: ''
   })
   .actions((store) => ({
     afterAttach() {
@@ -38,8 +39,7 @@ export const TodoModel = t
       try {
         const todo = yield Api.Todos.add(store);
         
-        todo.isSending = false;
-        todo.isCreatedLocally = false;
+        
          getRoot(store).groups.replaceTodoRef(
           store.id,
           todo.id
@@ -47,8 +47,11 @@ export const TodoModel = t
          getRoot(store).todos.replaceItem(store.id, todo);
          console.log('todo.id = ', todo.id)
          console.log('store = ', store)
-         const result = yield Api.Groups.addTodo(todo.id, todo);
+         const result = yield Api.Groups.addTodo(store.activeGroupId, todo);
          console.log('result = ', result);
+         store.isSending = false;
+         store.isCreatedLocally = false;
+         store.activeGroupId = '';
       } catch (error) {
         console.log(error);
         store.isSendingError = true;
@@ -100,11 +103,12 @@ export const TodoListModel = t
     //   yield todo.send();
 
     // }),
-    add(title) {
+    add(activeGroupId, title) {
       const todo = {
         id: uuid(),
         title,
         isCreatedLocally: true,
+        activeGroupId, 
       };
       store.list.unshift(todo);
     },

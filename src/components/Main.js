@@ -31,7 +31,10 @@ const Main = () => {
 
   const addNewTodo = () => {
     if (!inputValue.trim()) return;
-    store.todos.add(inputValue);
+    
+    //pass active group id and new todo to add todo reference in active group
+    store.todos.add(store.groups.list[active.group].id, inputValue);
+    
     store.groups.list[active.group].addTodo(store.todos.list[0]);
     setActive({
       group: active.group,

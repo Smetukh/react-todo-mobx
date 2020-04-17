@@ -45,8 +45,8 @@ const GroupsApi = {
   },
 
   addTodo(id, body) {
-    console.log('addTodo = ', id)
-    console.log('addTodo = ', body)
+    console.log('addTodo ID = ', id)
+    console.log('addTodo body = ', body)
     return fetchData(`groups/${id}`, { method: 'post', body });
   },
 
