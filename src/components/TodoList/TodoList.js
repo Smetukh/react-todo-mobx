@@ -19,7 +19,7 @@ const TodoList = ({
     active.group === "Important"
       ? store.todos.favoriteList
       : values(store.groups.list[active.group].todos);
-
+  
   return (
     <div className="main__todos-container">
       <div className="main__todos-title">

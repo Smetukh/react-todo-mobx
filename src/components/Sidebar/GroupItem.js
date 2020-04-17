@@ -1,9 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
+import { routes } from "../../router";
 
 const GroupItem = ({
-  group,
+  group = {
+    id: null,
+  },
   activeItem,
   icon,
   todosFavorite = [],
@@ -14,6 +18,8 @@ const GroupItem = ({
     "main__color-grey": !activeItem,
     "main__color-blue": activeItem,
   });
+  const newPath = `${routes.groups}${group.id}`;
+  console.log("group = ", group);
   let filteredList = null;
   let todoNumber = null;
   if (group.title !== "Important") {
@@ -23,19 +29,21 @@ const GroupItem = ({
     todoNumber = todosFavorite.length;
   }
   return (
-    <li className="main__sidebar-listItem">
-      <FontAwesomeIcon
-        className={classNames("main__todos-faIcon", "main__color-grey")}
-        size="xs"
-        icon={icon}
-        onClick={() => getActiveGroup(group.id)}
-      />
-      <span className={cn} onClick={() => getActiveGroup(group.id)}>
-        {group.title}
-      </span>
+    <Link to={`/groups/${group.id}`}>
+      <li className="main__sidebar-listItem">
+        <FontAwesomeIcon
+          className={classNames("main__todos-faIcon", "main__color-grey")}
+          size="xs"
+          icon={icon}
+          onClick={() => getActiveGroup(group.id)}
+        />
+        <span className={cn} onClick={() => getActiveGroup(group.id)}>
+          {group.title}
+        </span>
 
-      {!!todoNumber && <p className="main__todos-favIcon">{todoNumber}</p>}
-    </li>
+        {!!todoNumber && <p className="main__todos-favIcon">{todoNumber}</p>}
+      </li>
+    </Link>
   );
 };
 export default GroupItem;

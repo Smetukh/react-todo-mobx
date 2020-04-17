@@ -13,7 +13,7 @@ const Main = () => {
   });
   const [inputValue, setInputValue] = useState("");
   const [inputGroup, setInputGroup] = useState("");
-  console.log('active = ', active)
+  console.log("active = ", active);
   // console.log('todos = ', values(store.groups.list[0].todos))
 
   const getActiveGroup = (id) => {
@@ -66,24 +66,31 @@ const Main = () => {
   const inputGroupChangeHandler = (event) => {
     setInputGroup(event.target.value);
   };
-  console.log('Main store = ', store)
+  console.log("Main store = ", store);
   return (
-    
     <div className="main__container">
-      {store.groups.list.length ? 
-      <><Sidebar
-        {...{
-          active,
-          getActiveGroup,
-          inputGroup,
-          inputGroupChangeHandler,
-          keyGroupPress,
-        }}
-      />
-      <TodoList {...{active, inputChangeHandler, keyPress, inputValue, addNewTodo}}/></>
-      : null}
-      
-      
+      {store.groups.list.length ? (
+        <>
+          <Sidebar
+            {...{
+              active,
+              getActiveGroup,
+              inputGroup,
+              inputGroupChangeHandler,
+              keyGroupPress,
+            }}
+          />
+          <TodoList
+            {...{
+              active,
+              inputChangeHandler,
+              keyPress,
+              inputValue,
+              addNewTodo,
+            }}
+          />
+        </>
+      ) : null}
     </div>
   );
 };

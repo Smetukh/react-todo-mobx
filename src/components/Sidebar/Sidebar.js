@@ -9,6 +9,8 @@ import store from "../../stores/RootStore";
 
 import GroupItem from "./GroupItem";
 
+
+
 const Sidebar = ({
   active,
   getActiveGroup,
