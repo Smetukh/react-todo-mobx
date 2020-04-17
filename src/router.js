@@ -8,7 +8,7 @@ import NotFound from "./components/NotFound";
 
 export const routes = {
   home: "/",
-  groups: "/groups/:id",
+  groups: "/group/:id",
   about: "/about",
   completed: "/completed",
   notFound: "/notFound",

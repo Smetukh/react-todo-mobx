@@ -29,7 +29,7 @@ const GroupItem = ({
     todoNumber = todosFavorite.length;
   }
   return (
-    <Link to={`/groups/${group.id}`}>
+    <Link to={`/group/${group.id}`}>
       <li className="main__sidebar-listItem">
         <FontAwesomeIcon
           className={classNames("main__todos-faIcon", "main__color-grey")}
