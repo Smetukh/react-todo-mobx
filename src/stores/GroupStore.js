@@ -21,8 +21,8 @@ const GroupModel = t
   .actions((store) => ({
     addTodo(todo) {
       store.todos.unshift(todo);
-      store.isTodoCreatedLocally = true;
-      store.sendTodoRef();
+      // store.isTodoCreatedLocally = true;
+      // store.sendTodoRef();
     },
     afterAttach() {
       if (store.isCreatedLocally) {

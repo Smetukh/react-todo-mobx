@@ -37,6 +37,7 @@ export const TodoModel = t
       store.isSendingError = false;
       try {
         const todo = yield Api.Todos.add(store);
+        
         todo.isSending = false;
         todo.isCreatedLocally = false;
          getRoot(store).groups.replaceTodoRef(
@@ -44,6 +45,10 @@ export const TodoModel = t
           todo.id
         );
          getRoot(store).todos.replaceItem(store.id, todo);
+         console.log('todo.id = ', todo.id)
+         console.log('store = ', store)
+         const result = yield Api.Groups.addTodo(todo.id, todo);
+         console.log('result = ', result);
       } catch (error) {
         console.log(error);
         store.isSendingError = true;
