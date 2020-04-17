@@ -9,12 +9,12 @@ import TodoList from "./TodoList/TodoList";
 const Main = () => {
   const [active, setActive] = useState({
     group: 0,
-    todos: values(store.groups.list[0].todos),
+    // todos: values(store.groups.list[0].todos),
   });
   const [inputValue, setInputValue] = useState("");
   const [inputGroup, setInputGroup] = useState("");
   console.log('active = ', active)
-  console.log('todos = ', values(store.groups.list[0].todos))
+  // console.log('todos = ', values(store.groups.list[0].todos))
 
   const getActiveGroup = (id) => {
     const newGroupIndex = store.groups.list.findIndex((item) => id === item.id);
@@ -24,7 +24,7 @@ const Main = () => {
     } else {
       setActive({
         group: newGroupIndex,
-        todos: values(store.groups.list[newGroupIndex].todos),
+        // todos: values(store.groups.list[newGroupIndex].todos),
       });
     }
   };
@@ -68,8 +68,10 @@ const Main = () => {
   };
   console.log('Main store = ', store)
   return (
+    
     <div className="main__container">
-      <Sidebar
+      {store.groups.list.length ? 
+      <><Sidebar
         {...{
           active,
           getActiveGroup,
@@ -78,7 +80,9 @@ const Main = () => {
           keyGroupPress,
         }}
       />
-      <TodoList {...{active, inputChangeHandler, keyPress, inputValue, addNewTodo}}/>
+      <TodoList {...{active, inputChangeHandler, keyPress, inputValue, addNewTodo}}/></>
+      : null}
+      
       
     </div>
   );

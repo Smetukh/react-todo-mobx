@@ -29,7 +29,7 @@ rootStore.todos.getTodos().then(async () => {
   // await rootStore.todos.list[0].toggleFavorite();
   // console.log('LOADING getTodos SUCCESS')});
 
-  rootStore.groups.add("SHOPPING LIST");
+  // rootStore.groups.add("SHOPPING LIST");
 
 // const persist = createPersist(rootStore, localForage);
 // persist.rehydrate();
