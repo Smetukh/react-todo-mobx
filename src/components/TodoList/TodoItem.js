@@ -33,9 +33,9 @@ const TodoItem = observer(({ todo }) => {
         className={classNames("main__todos-faIcon", "main__color-blue")}
         size="xs"
         icon={todo.isCompleted ? faCheckCircle : faCircle}
-        onClick={() => {console.log('toggleComplete '); todo.toggleComplete()}}
+        onClick={() => {todo.toggleStatus('isCompleted')}}
       />
-      <span className={cn} onClick={() => todo.toggleComplete()}>
+      <span className={cn} onClick={() => todo.toggleStatus('isCompleted')}>
         {todo.title}
       </span>
 
@@ -43,7 +43,7 @@ const TodoItem = observer(({ todo }) => {
         className={cnIcon}
         size="xs"
         icon={todo.isFavorite ? faStar : faStarOfLife}
-        onClick={() => todo.toggleFavorite()}
+        onClick={() => todo.toggleStatus('isFavorite')}
       />
     </li>
   );

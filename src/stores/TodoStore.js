@@ -25,7 +25,7 @@ export const TodoModel = t
     isCreatedLocally: false,
     isLoading: false,
     isLoadingError: false,
-    activeGroupId: ''
+    activeGroupId: "",
   })
   .actions((store) => ({
     afterAttach() {
@@ -38,42 +38,37 @@ export const TodoModel = t
       store.isSendingError = false;
       try {
         const todo = yield Api.Todos.add(store);
-        
-        
-         getRoot(store).groups.replaceTodoRef(
+
+        getRoot(store).groups.replaceTodoRef(
           store.activeGroupId,
           store.id,
           todo.id
         );
-         getRoot(store).todos.replaceItem(store.id, todo);
-         console.log('todo.id = ', todo.id)
-         console.log('store = ', store)
-         const result = yield Api.Groups.addTodo(store.activeGroupId, todo);
-         console.log('result = ', result);
-         store.isSending = false;
-         store.isCreatedLocally = false;
-         store.activeGroupId = '';
+        getRoot(store).todos.replaceItem(store.id, todo);
+        console.log("todo.id = ", todo.id);
+        console.log("store = ", store);
+        const result = yield Api.Groups.addTodo(store.activeGroupId, todo);
+        console.log("result = ", result);
+        store.isSending = false;
+        store.isCreatedLocally = false;
+        store.activeGroupId = "";
       } catch (error) {
         console.log(error);
         store.isSendingError = true;
         store.isSending = false;
       }
     }),
-    toggleComplete() {
-      store.isCompleted = !store.isCompleted;
-    },
-    toggleFavorite: flow(function* toggleFavorite() {
-      const oldValue = store.isFavorite;
+    toggleStatus: flow(function* toggleStatus(status) {
+      const oldValue = store[status];
       store.isTogglingFavorite = true;
       store.isTogglingFavoriteError = false;
-      store.isFavorite = !store.isFavorite;
-
+      store[status] = !store[status];
       try {
-        yield Api.Todos.update({ id: store.id, isFavorite: store.isFavorite });
+        yield Api.Todos.update(store.id, { [status]: store[status] });
       } catch (error) {
         console.log(error);
         store.isTogglingFavoriteError = true;
-        store.isFavorite = oldValue;
+        store[status] = oldValue;
       } finally {
         store.isTogglingFavorite = false;
       }
@@ -95,21 +90,12 @@ export const TodoListModel = t
     },
   }))
   .actions((store) => ({
-    // add: flow(function* add(title) {
-    //   const todo = TodoModel.create({
-    //     id: uuid(),
-    //     title,
-    //   });
-    //   store.list.unshift(todo);
-    //   yield todo.send();
-
-    // }),
     add(activeGroupId, title) {
       const todo = {
         id: uuid(),
         title,
         isCreatedLocally: true,
-        activeGroupId, 
+        activeGroupId,
       };
       store.list.unshift(todo);
     },
@@ -120,7 +106,7 @@ export const TodoListModel = t
         store.list[index] = todo;
       }
     },
-    
+
     getTodos: flow(function* getTodos() {
       store.isLoading = true;
       store.isLoadingError = false;

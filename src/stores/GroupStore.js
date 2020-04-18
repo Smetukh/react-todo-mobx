@@ -1,9 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { TodoModel } from "./TodoStore";
 import { types as t, flow, getRoot } from "mobx-state-tree";
-import { prettyPrint } from "../utils";
 import Api from "../api/Api";
-
 
 const GroupModel = t
   .model("ListModel", {
@@ -13,16 +11,12 @@ const GroupModel = t
     isSending: false,
     isSendingError: false,
     isCreatedLocally: false,
-    isTodoCreatedLocally: false,
     isLoading: false,
     isLoadingError: false,
-
   })
   .actions((store) => ({
     addTodo(todo) {
       store.todos.unshift(todo);
-      // store.isTodoCreatedLocally = true;
-      // store.sendTodoRef();
     },
     afterAttach() {
       if (store.isCreatedLocally) {
@@ -34,34 +28,12 @@ const GroupModel = t
       store.isSendingError = false;
       try {
         const group = yield Api.Groups.add(store);
-        group.isSending = false;
-        group.isCreatedLocally = false;
-
-        console.log("store.id = ", store.id);
-        console.log("group = ", group);
-
-         getRoot(store).groups.replaceGroup(store.id, group);
+        getRoot(store).groups.replaceGroup(store.id, group);
+        store.isCreatedLocally = false;
       } catch (error) {
         console.log(error);
         store.isSendingError = true;
-        store.isSending = false;
-      }
-    }),
-    sendTodoRef: flow(function* sendTodoRef() {
-      store.isSending = true;
-      store.isSendingError = false;
-      try {
-        const group = yield Api.Groups.addTodo(store.id, store);
-        group.isSending = false;
-        group.isCreatedLocally = false;
-
-        console.log("store.id = ", store.id);
-        console.log("group = ", group);
-
-         getRoot(store).groups.replaceGroup(store.id, group);
-      } catch (error) {
-        console.log(error);
-        store.isSendingError = true;
+      } finally {
         store.isSending = false;
       }
     }),
@@ -87,15 +59,14 @@ export const GroupListModel = t
       }
     },
     replaceTodoRef(activeGroupId, id, newId) {
-      const activeGroupIndex = getRoot(store).groups.list.findIndex((group) => group.id === activeGroupId);
-      console.log('activeGroupIndex = ', activeGroupIndex)
-      const index = getRoot(store).groups.list[activeGroupIndex].todos.findIndex((item) => {
-        console.log("item = ", item);
-        return item.id === id;
-      });
+      const activeGroupIndex = getRoot(store).groups.list.findIndex(
+        (group) => group.id === activeGroupId
+      );
+      const index = getRoot(store).groups.list[
+        activeGroupIndex
+      ].todos.findIndex((item) => item.id === id);
       if (index > -1) {
         store.list[activeGroupIndex].todos[index] = newId;
-
       }
     },
     getGroups: flow(function* getGroups() {
@@ -113,12 +84,3 @@ export const GroupListModel = t
       }
     }),
   }));
-
-// const group = GroupModel.create({
-//   id: uuid(),
-//   title: 'shippIng list'
-// })
-
-// const groupList = GroupListModel.create({
-//   list: [group],
-// });
