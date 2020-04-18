@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import { routes } from "../../router";
 
 const GroupItem = ({
   group = {
@@ -18,8 +17,7 @@ const GroupItem = ({
     "main__color-grey": !activeItem,
     "main__color-blue": activeItem,
   });
-  const newPath = `${routes.groups}${group.id}`;
-  console.log("group = ", group);
+
   let filteredList = null;
   let todoNumber = null;
   if (group.title !== "Important") {

@@ -75,7 +75,6 @@ export const GroupListModel = t
 
       try {
         let groups = yield Api.Groups.getAll();
-        console.log('groups = ', groups)
         if (!groups.length) {
           yield store.add('Tasks');
           groups = yield Api.Groups.getAll();

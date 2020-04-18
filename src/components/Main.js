@@ -8,13 +8,10 @@ import TodoList from "./TodoList/TodoList";
 
 const Main = () => {
   const [active, setActive] = useState({
-    group: 'Important',
-    // todos: values(store.groups.list[0].todos),
+    group: "Important",
   });
   const [inputValue, setInputValue] = useState("");
   const [inputGroup, setInputGroup] = useState("");
-  console.log("active = ", active);
-  // console.log('todos = ', values(store.groups.list[0].todos))
 
   const getActiveGroup = (id) => {
     const newGroupIndex = store.groups.list.findIndex((item) => id === item.id);
@@ -24,22 +21,27 @@ const Main = () => {
     } else {
       setActive({
         group: newGroupIndex,
-        // todos: values(store.groups.list[newGroupIndex].todos),
       });
     }
   };
 
   const addNewTodo = () => {
     if (!inputValue.trim()) return;
-    
+
     //pass active group id and new todo to add todo reference in active group
-    const activeGroup = active.group === 'Important' ? store.groups.list.length - 1 : active.group;
-    store.todos.add(active.group, store.groups.list[activeGroup].id, inputValue);
-    
+    const activeGroup =
+      active.group === "Important"
+        ? store.groups.list.length - 1
+        : active.group;
+    store.todos.add(
+      active.group,
+      store.groups.list[activeGroup].id,
+      inputValue
+    );
+
     store.groups.list[activeGroup].addTodo(store.todos.list[0]);
     setActive({
       group: active.group,
-      // todos: values(store.groups.list[active.group].todos),
     });
     setInputValue("");
   };
@@ -70,7 +72,6 @@ const Main = () => {
   const inputGroupChangeHandler = (event) => {
     setInputGroup(event.target.value);
   };
-  console.log("Main store = ", store);
   return (
     <div className="main__container">
       {store.groups.list.length ? (

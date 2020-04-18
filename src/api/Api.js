@@ -23,8 +23,6 @@ const TodosApi = {
   },
 
   update(id, body) {
-    console.log('update id = ', id)
-    console.log('update body = ', body)
     return fetchData(`todos/${id}`, { method: 'patch', body });
   },
 };
@@ -278,9 +276,6 @@ async function createTodo(options, cache) {
 
 async function updateTodo(id, options, cache) {
   let newTodo;
-console.log('updateTodo id', id)
-console.log('updateTodo options', options)
-console.log('updateTodo cache', cache)
   const newTodos = cache.todos.map((todo) => {
     if (todo.id !== id) {
       return todo;
@@ -291,7 +286,6 @@ console.log('updateTodo cache', cache)
       ...options.body,
       updatedAt: new Date().getTime(),
     });
-    console.log('updateTodo newTodo0', newTodo)
     return newTodo;
   });
 
@@ -299,7 +293,6 @@ console.log('updateTodo cache', cache)
     ...cache,
     todos: newTodos,
   });
-  console.log('updateTodo newTodo1', newTodo)
   return newTodo;
 }
 
