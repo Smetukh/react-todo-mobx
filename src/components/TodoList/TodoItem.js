@@ -8,7 +8,6 @@ import {
   faStarOfLife,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
-import store from "../../stores/RootStore";
 
 const TodoItem = observer(({ todo }) => {
   const cn = classNames({

@@ -12,9 +12,10 @@ const Main = () => {
   });
   const [inputValue, setInputValue] = useState("");
   const [inputGroup, setInputGroup] = useState("");
+  const storeGroupList = store.groups.list;
 
   const getActiveGroup = (id) => {
-    const newGroupIndex = store.groups.list.findIndex((item) => id === item.id);
+    const newGroupIndex = storeGroupList.findIndex((item) => id === item.id);
     if (newGroupIndex === -1) {
       const favoriteList = store.todos.favoriteList;
       setActive({ group: "Important", todos: favoriteList });
@@ -27,26 +28,27 @@ const Main = () => {
 
   const addNewTodo = () => {
     if (!inputValue.trim()) return;
+    
 
     //pass active group id and new todo to add todo reference in active group
     const activeGroup =
       active.group === "Important"
-        ? store.groups.list.length - 1
+        ? storeGroupList.length - 1
         : active.group;
     store.todos.add(
       active.group,
-      store.groups.list[activeGroup].id,
+      storeGroupList[activeGroup].id,
       inputValue
     );
 
-    store.groups.list[activeGroup].addTodo(store.todos.list[0]);
+    storeGroupList[activeGroup].addTodo(store.todos.list[0]);
     setActive({
       group: active.group,
     });
     setInputValue("");
   };
   const keyPress = (e) => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       addNewTodo();
     }
   };
@@ -59,12 +61,12 @@ const Main = () => {
     store.groups.add(inputGroup);
     setActive({
       group: 0,
-      todos: values(store.groups.list[0].todos),
+      todos: values(storeGroupList[0].todos),
     });
     setInputGroup("");
   };
   const keyGroupPress = (e) => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       addNewGroup();
     }
   };
@@ -74,7 +76,7 @@ const Main = () => {
   };
   return (
     <div className="main__container">
-      {store.groups.list.length ? (
+      {storeGroupList.length ? (
         <>
           <Sidebar
             {...{

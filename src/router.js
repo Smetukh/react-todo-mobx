@@ -2,8 +2,6 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import App from "./App";
 import About from "./components/About";
-import GroupItem from "./components/Sidebar/GroupItem";
-import Main from "./components/Main";
 import NotFound from "./components/NotFound";
 
 export const routes = {
