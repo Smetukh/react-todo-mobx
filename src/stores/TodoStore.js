@@ -41,6 +41,7 @@ export const TodoModel = t
         
         
          getRoot(store).groups.replaceTodoRef(
+          store.activeGroupId,
           store.id,
           todo.id
         );

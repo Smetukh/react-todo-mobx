@@ -86,13 +86,15 @@ export const GroupListModel = t
         store.list[index] = group;
       }
     },
-    replaceTodoRef(id, newId) {
-      const index = getRoot(store).groups.list[0].todos.findIndex((item) => {
+    replaceTodoRef(activeGroupId, id, newId) {
+      const activeGroupIndex = getRoot(store).groups.list.findIndex((group) => group.id === activeGroupId);
+      console.log('activeGroupIndex = ', activeGroupIndex)
+      const index = getRoot(store).groups.list[activeGroupIndex].todos.findIndex((item) => {
         console.log("item = ", item);
         return item.id === id;
       });
       if (index > -1) {
-        store.list[0].todos[index] = newId;
+        store.list[activeGroupIndex].todos[index] = newId;
 
       }
     },
