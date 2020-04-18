@@ -74,7 +74,13 @@ export const GroupListModel = t
       store.isLoadingError = false;
 
       try {
-        const groups = yield Api.Groups.getAll();
+        let groups = yield Api.Groups.getAll();
+        console.log('groups = ', groups)
+        if (!groups.length) {
+          yield store.add('Tasks');
+          groups = yield Api.Groups.getAll();
+          
+        }
         store.list = groups;
       } catch (error) {
         console.log(error);

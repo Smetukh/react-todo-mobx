@@ -14,6 +14,9 @@ const RootModel = t.model("RootModel", {
 
 const rootStore = RootModel.create({});
 
+const getAll = () => {
+  
+}
 
 onSnapshot(rootStore, (snapshot) => prettyPrint(snapshot));
 // autorun(() => prettyPrint(rootStore));

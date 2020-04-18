@@ -41,13 +41,13 @@ const Sidebar = ({
           getActiveGroup={getActiveGroup}
           todosFavorite={store.todos.favoriteList}
         />
-        {values(store.groups.list).map((group, index) => (
+        {values(store.groups.list).reverse().map((group, index) => (
           <GroupItem
             active={active}
             key={group.id}
             group={group}
             icon={faList}
-            activeItem={index === active.group}
+            activeItem={store.groups.list.length - 1 - index === active.group}
             getActiveGroup={getActiveGroup}
             todosCompleted={store.todos.completedList}
           />

@@ -8,7 +8,7 @@ import TodoList from "./TodoList/TodoList";
 
 const Main = () => {
   const [active, setActive] = useState({
-    group: 0,
+    group: 'Important',
     // todos: values(store.groups.list[0].todos),
   });
   const [inputValue, setInputValue] = useState("");
@@ -33,12 +33,13 @@ const Main = () => {
     if (!inputValue.trim()) return;
     
     //pass active group id and new todo to add todo reference in active group
-    store.todos.add(store.groups.list[active.group].id, inputValue);
+    const activeGroup = active.group === 'Important' ? store.groups.list.length - 1 : active.group;
+    store.todos.add(active.group, store.groups.list[activeGroup].id, inputValue);
     
-    store.groups.list[active.group].addTodo(store.todos.list[0]);
+    store.groups.list[activeGroup].addTodo(store.todos.list[0]);
     setActive({
       group: active.group,
-      todos: values(store.groups.list[active.group].todos),
+      // todos: values(store.groups.list[active.group].todos),
     });
     setInputValue("");
   };
