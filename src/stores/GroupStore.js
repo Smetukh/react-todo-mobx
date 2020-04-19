@@ -28,12 +28,12 @@ const GroupModel = t
       store.isSendingError = false;
       try {
         const group = yield Api.Groups.add(store);
-        getRoot(store).groups.replaceGroup(store.id, group);
         store.isCreatedLocally = false;
+        store.isSending = false;
+        getRoot(store).groups.replaceGroup(store.id, group);
       } catch (error) {
         console.log(error);
         store.isSendingError = true;
-      } finally {
         store.isSending = false;
       }
     }),

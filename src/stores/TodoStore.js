@@ -34,8 +34,8 @@ export const TodoModel = t
           store.id,
           todo.id
         );
+        yield Api.Groups.addTodo(store.activeGroupId, todo);
         getRoot(store).todos.replaceItem(store.id, todo);
-        const result = yield Api.Groups.addTodo(store.activeGroupId, todo);
         store.isSending = false;
         store.isCreatedLocally = false;
         store.activeGroupId = "";
@@ -67,6 +67,7 @@ export const TodoListModel = t
     list: t.array(TodoModel),
     isLoading: false,
     isLoadingError: false,
+    activeGroupId: '',
   })
   .views((store) => ({
     get favoriteList() {
@@ -82,7 +83,7 @@ export const TodoListModel = t
         id: uuid(),
         title,
         isCreatedLocally: true,
-        activeGroupId,
+        activeGroupId: activeGroupId,
         //set default favorite status
         isFavorite: activeGroupIndex === "Important" ? true : false,
       };
